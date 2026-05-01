@@ -1,6 +1,6 @@
 /**
- * byproxie  proxy detection engine 
- * version: 4.1.0-dev
+ * byproxie enterprise proxy detection engine - cdn edition
+ * version: 4.1.1-cdn
  */
 
 (function (global) {
@@ -9,8 +9,9 @@
     if (global.ByProxie) return; // prevent double instantiation
 
     // preserve native references before proxy scripts can mock them
+    // natively bound functions require .bind(global) to prevent 'illegal invocation'
     const NATIVE = {
-        fetch:              global.fetch,
+        fetch:              global.fetch.bind(global),
         XMLHttpRequest:     global.XMLHttpRequest,
         XHROpen:            global.XMLHttpRequest.prototype.open,
         WebSocket:          global.WebSocket,
@@ -20,13 +21,13 @@
         SWRegister:         global.navigator?.serviceWorker?.register?.bind(global.navigator.serviceWorker),
         historyPushState:   global.history?.pushState,
         historyReplaceState:global.history?.replaceState,
-        postMessage:        global.postMessage,
+        postMessage:        global.postMessage.bind(global),
         dispatchEvent:      global.document.dispatchEvent.bind(global.document),
         CustomEvent:        global.CustomEvent,
         crypto:             global.crypto,
         MutationObserver:   global.MutationObserver,
-        setTimeout:         global.setTimeout,
-        setInterval:        global.setInterval,
+        setTimeout:         global.setTimeout.bind(global),
+        setInterval:        global.setInterval.bind(global),
         ResponseText:       global.Response?.prototype?.text
     };
 
